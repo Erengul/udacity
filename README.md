@@ -140,7 +140,7 @@ Explore and Assess the Data :
 <ol>
 <li>hosts: hosts information
 
-![schema](image/hosts.png)
+![schema](image/Hosts.png)
 
 </li>
 <li>locations : location of listings
