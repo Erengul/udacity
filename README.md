@@ -117,7 +117,7 @@ Explore and Assess the Data :
 </li>
 <li>staging_reviews : records from s3://airbnb-review/reviews to  table
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/StagingReviews.png)
+![schema](image/StagingReviews.png)
 
 </ol>
 
@@ -125,13 +125,13 @@ Explore and Assess the Data :
 <ol>
 <li>listing: records from  staging_listings tables. Includes listing information
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/Listing.png)
+![schema](image/Listing.png)
 *<font size="0.3">All columns of the table are not shown in the picture</font>
 
  </li>
 <li>reviews : records from staging_reviews table if listing id associated with listings table. Includes comments information of reviewers
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/Reviews.png)
+![schema](image/Reviews.png)
 
 </li>
 </ol>
@@ -140,7 +140,7 @@ Explore and Assess the Data :
 <ol>
 <li>hosts: hosts information
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/hosts.png)
+![schema](image/hosts.png)
 
 </li>
 <li>locations : location of listings
