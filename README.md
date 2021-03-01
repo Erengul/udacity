@@ -1,4 +1,4 @@
-# Capstone Project: Data Modeling with Airbnb Dataset
+# Capstone Project
 
 ## Purpose of the Project
 
