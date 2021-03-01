@@ -104,10 +104,14 @@ load_time_dimension_table = LoadDimensionOperator(
 )
 
 # setting data quality checks
+# 1. check null primary keys
+# 2. check duplicated values for primary keys on dimension tables
 dq_checks=[{'check_sql': "select count(*) from reviewers WHERE reviewer_id is null", 'expected_result': 0},
            {'check_sql': "select count(*) FROM hosts WHERE host_id is null", 'expected_result': 0},
-           {'check_sql': "select count(*) FROM locations WHERE latitude is null or longitude is null", 'expected_result': 0}
-          ]
+           {'check_sql': "select count(*) FROM locations WHERE latitude is null or longitude is null", 'expected_result': 0},
+           {'check_sql': "select count(*) from(select host_id, count(*) from hosts group by host_id having count(*) > 1)", 'expected_result': 0},
+           {'check_sql': "select count(*) from(select latitude, longitude, count(*) from locations group by latitude, longitude having count(*) > 1)", 'expected_result': 0},
+           {'check_sql': "select count(*) from(select reviewer_id, count(*) from reviewers group by reviewer_id having count(*) > 1)", 'expected_result': 0}]
 
 
 run_quality_checks = DataQualityOperator(
