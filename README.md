@@ -19,7 +19,7 @@ The Airbnb dataset was gathered, analyzed, and modeled. It was aimed to easily u
 
 ## Data Sources
 
-Data was gathered from [kaggle.](https://www.kaggle.com/samyukthamurali/airbnb-ratings-dataset?select=NY_Listings.csv) This dataset contains the list of houses to be rented in New York, Los Angeles and the comments made by the users about these houses. For the project, two following files were used :
+Data was gathered from [kaggle.](https://www.kaggle.com/samyukthamurali/airbnb-ratings-dataset) This dataset contains the list of houses to be rented in New York, Los Angeles and the comments made by the users about these houses. For the project, two following files were used :
 
 
 **NY_Listings.csv**
