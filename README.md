@@ -111,7 +111,7 @@ Explore and Assess the Data :
 <ol>
 <li>staging_listings: records from s3://airbnb-review/listing to table
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/StagingListing.png)
+![schema](image/StagingListing.png)
 *<font size="0.3"> All columns of the table are not shown in the picture.</font>
 
 </li>
@@ -145,15 +145,15 @@ Explore and Assess the Data :
 </li>
 <li>locations : location of listings
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/Locations.png)
+![schema](image/Locations.png)
 </li>
 <li>reviewers : users who write commments for listing
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/Reviewers.png)
+![schema](image/Reviewers.png)
 </li>
 <li>time : timestamps of records in reviews broken down into specific units
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/Time.png)
+![schema](image/Time.png)
 
 </li>
 </ol>
@@ -163,25 +163,25 @@ Explore and Assess the Data :
 
 Database design below :
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/ModelDiagram.png)
+![schema](image/ModelDiagram.png)
 
 ## ETL Pipeline
 
 ETL Design below :
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/ETLDiagram.png)
+![schema](image/ETLDiagram.png)
 
 Airflow graph view :
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/AirflowGraphView.png)
+![schema](image/AirflowGraphView.png)
 
 Airflow tree view :
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/AirflowTreeView.png)
+![schema](image/AirflowTreeView.png)
 
 Airflow execution time :
 
-![schema](/Users/erengulbayram/Documents/Udacity/CapstoneProject/image/AirflowGrant.png)
+![schema](image/AirflowGrant.png)
 
 
 
