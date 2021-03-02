@@ -7,16 +7,6 @@ The purpose of the capstone project is to combine what I learned from the Data E
 The Airbnb dataset was gathered, analyzed, and modeled. It was aimed to easily use by business units, data scientists. Also, database can be used to create queries for the Airbnb dataset. Users can find answers for questions such as "How many listings are available ?",  "What is the relationship between reviews and listings?", "What are the features of the listings that get the good/bad reviews?".
 
 
-## Scripts
-
-- create_tables.sql : SQL for creating tables on redshift datawarehouse.
-- sql_queries.py : Insert scripts for tables.
-- data_quality.py : Checking row counts of table to ensure data quality.
-- load_dimenison.py : Loading dimension tables from fact tables.
-- load_fact.py :  Loading fact tables from staging tables
-- stage_redshift.py : Loading data from CSV files on S3 to Redshift staging tables.
-
-
 ## Data Sources
 
 Data was gathered from [kaggle.](https://www.kaggle.com/samyukthamurali/airbnb-ratings-dataset) This dataset contains the list of houses to be rented in New York, Los Angeles and the comments made by the users about these houses. For the project, two following files were used :
@@ -80,8 +70,7 @@ Explore and Assess the Data :
 - Csv files include header.
 - String may contains invalid or unsupported UTF8 codepoints. To fix this, acceptinvchars statement is added to copy sql statement that move data from S3 to Redshift.
 - Determined max length of strings. Some columns type like amenities are defined as varchar(max).
-- Checked primary keys values in case they can be null.
-- Checked duplicated primary keys in dimension tables.
+
 
 ## Used Technologies
 
@@ -106,9 +95,11 @@ Explore and Assess the Data :
 </ol>
 
 
-## Database Design
+## Data Model
 
-**Staging Tables**
+In the project, database includes staging, fact and dimension tables. Staging tables are used to stored log data from the S3. All data is written in the staging tables without any change. Then for the final data model, fact and dimension tables are loaded from these staging tables. Business teams / data scientists etc. should be used final data model which includes fact and dimension tables.
+
+### Staging Tables
 
 <ol>
 <li>staging_listings: records from s3://airbnb-review/listing to table
@@ -123,7 +114,29 @@ Explore and Assess the Data :
 
 </ol>
 
-**Fact Tables**
+Then, according to analysis on staging tables, following issues are determined :
+
+- The name of hosts can be different even if they have same host_id.
+- The name of reviewers can be different even if they have same reviewer_id.
+
+To solve this problem, the most recent record has been saved in dimension tables and below data quality checks are added to end of the dag :
+
+- Checked primary keys values in case they can be null.
+- Checked duplicated primary keys in dimension tables.
+
+### Fact and Dimension Tables
+
+**Final Database design below**:
+
+![schema](image/ModelDiagram.png)
+
+- For database design, star schema is chosen to simplify joins and meet business-technical needs with flexibility.
+- Listing fact table is created from staging_listings. Reviews fact table is created from staging_reviews table. They are centered of the database design. Because they contain keys of dimension tables.
+- With this design, users can find relation between listing and reviews.
+
+
+
+**Fact Tables and Data Dictionary**
 <ol>
 <li>listing: records from  staging_listings tables. Includes listing information.
 
@@ -180,7 +193,7 @@ Explore and Assess the Data :
 </li>
 </ol>
 
-**Dimension Tables**
+**Dimension Tables and Data Dictionary**
 <ol>
 <li>hosts: hosts information
 
@@ -236,22 +249,24 @@ Explore and Assess the Data :
 </ol>
 
 
+## Scripts
 
-
-Database design below :
-
-![schema](image/ModelDiagram.png)
-
-- For database design, star schema is chosen to simplify joins and meet business-technical needs with flexibility.
-- Listing fact table is created from staging_listings. Reviews fact table is created from staging_reviews table. They are centered of the database design. Because they contain keys of dimension tables.
-- With this design, users can find relation between listing and reviews.
+- create_tables.sql : SQL for creating tables on redshift datawarehouse.
+- sql_queries.py : Insert scripts for tables.
+- data_quality.py : Checking row counts of table to ensure data quality.
+- load_dimenison.py : Loading dimension tables from fact tables.
+- load_fact.py :  Loading fact tables from staging tables
+- stage_redshift.py : Loading data from CSV files on S3 to Redshift staging tables.
 
 ## ETL Pipeline
+
+After defining the database design, ETL jobs were written to loading tables on Redshift.
 
 ETL Design below :
 
 ![schema](image/ETLDiagram.png)
 
+ETL jobs are scheduled with Airflow on hourly basis.
 Airflow graph view :
 
 ![schema](image/AirflowGraphView.png)
@@ -264,7 +279,7 @@ Airflow execution time :
 
 ![schema](image/AirflowGrant.png)
 
-
+After loading the tables, tables can be checked from the Redshift.
 
 
 ## Scenarios

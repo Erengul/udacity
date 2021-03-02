@@ -105,11 +105,13 @@ load_time_dimension_table = LoadDimensionOperator(
 
 # setting data quality checks
 # 1. check null primary keys
-# 2. check duplicated values for primary keys on dimension tables
-dq_checks=[{'check_sql': "select count(*) from reviewers WHERE reviewer_id is null", 'expected_result': 0},
+
+dq_checks_null=[{'check_sql': "select count(*) from reviewers WHERE reviewer_id is null", 'expected_result': 0},
            {'check_sql': "select count(*) FROM hosts WHERE host_id is null", 'expected_result': 0},
-           {'check_sql': "select count(*) FROM locations WHERE latitude is null or longitude is null", 'expected_result': 0},
-           {'check_sql': "select count(*) from(select host_id, count(*) from hosts group by host_id having count(*) > 1)", 'expected_result': 0},
+           {'check_sql': "select count(*) FROM locations WHERE latitude is null or longitude is null", 'expected_result': 0}]
+
+# 2. check duplicated values for primary keys on dimension tables
+dq_checks_duplicate=[{'check_sql': "select count(*) from(select host_id, count(*) from hosts group by host_id having count(*) > 1)", 'expected_result': 0},
            {'check_sql': "select count(*) from(select latitude, longitude, count(*) from locations group by latitude, longitude having count(*) > 1)", 'expected_result': 0},
            {'check_sql': "select count(*) from(select reviewer_id, count(*) from reviewers group by reviewer_id having count(*) > 1)", 'expected_result': 0}]
 
@@ -118,8 +120,12 @@ run_quality_checks = DataQualityOperator(
     task_id='Run_data_quality_checks',
     dag=dag,
     redshift_conn_id="redshift",
-    dq_checks = dq_checks
+    dq_type1="null_values",
+    dq_type2="duplicated_values",
+    dq_checks1 = dq_checks_null,
+    dq_checks2 = dq_checks_duplicate
 )
+
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
 
@@ -133,3 +139,4 @@ load_listing_table >> load_location_dimension_table >> run_quality_checks
 load_review_table >> load_reviewer_dimension_table >> run_quality_checks
 load_review_table >> load_time_dimension_table >> run_quality_checks
 run_quality_checks >> end_operator
+

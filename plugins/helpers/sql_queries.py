@@ -25,7 +25,7 @@ class SqlQueries:
             review_scores_communication	,
             review_scores_location ,
             review_scores_value	,
-            reviews_per_month 
+            reviews_per_month
             from public.staging_listings
     """)
 
@@ -33,7 +33,7 @@ class SqlQueries:
         select r.listing_id,
                r.id,
                r."date",
-               r.reviewer_id, 
+               r.reviewer_id,
                r.comments
         from public.staging_reviews r
         left join public.staging_listings l
@@ -41,32 +41,42 @@ class SqlQueries:
     """)
 
     hosts_table_insert = ("""
-        select distinct host_id ,
+        SELECT host_id ,
                 host_name ,
                 host_response_rate ,
                 host_is_superhost ,
-                host_total_listings_count 
-        from public.staging_listings
+                host_total_listings_count
+        FROM   (SELECT *,
+               Row_Number()OVER(partition BY host_id Order by calendar_last_scraped) AS RN
+               FROM   public.staging_listings) A
+        WHERE  RN = 1 ;
     """)
 
     locations_table_insert = ("""
-        select distinct latitude,longitude ,
-            street,
-            city ,
-            neighbourhood_cleansed ,
-            state ,
-            country	
-        from public.staging_listings
+        SELECT  latitude,
+    			longitude ,
+                street,
+                city ,
+                neighbourhood_cleansed ,
+                state ,
+                country
+        FROM   (SELECT *,
+                    Row_Number()OVER(partition BY latitude, longitude Order by calendar_last_scraped) AS RN
+               FROM   public.staging_listings) A
+        WHERE  RN = 1
     """)
-   
+
     reviewers_table_insert = ("""
-        select distinct reviewer_id,
-		        reviewer_name
-        from public.staging_reviews
+            SELECT 	reviewer_id,
+		            reviewer_name
+            FROM   (SELECT *,
+                    Row_Number()OVER(partition BY reviewer_id Order by date) AS RN
+                    FROM   public.staging_reviews) A
+            WHERE  RN = 1
     """)
-    
+
     time_table_insert = ("""
-        SELECT date, extract(hour from date), extract(day from date), extract(week from date), 
+        SELECT date, extract(hour from date), extract(day from date), extract(week from date),
                extract(month from date), extract(year from date), extract(dayofweek from date)
-        FROM public.staging_reviews;
+        FROM public.staging_reviews
     """)
